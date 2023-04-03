@@ -3,30 +3,22 @@
  * Contains class DBClient
  */
 import { MongoClient } from 'mongodb';
-import * as dotenv from 'dotenv';
+//import * as dotenv from 'dotenv';
 
-dotenv.config()
+//dotenv.config()
 
 class DBClient {
   constructor() {
     this.HOST = process.env.DB_HOST || 'localhost';
     this.PORT = process.env.DB_PORT || '27017';
     this.DB = process.env.DB_DATABASE || 'files_manager';
-    this.isConnect = false;
     this.url = `mongodb://${this.HOST}:${this.PORT}/${this.DB}`;
     this.client = new MongoClient(this.url, {useUnifiedTopology: true});
-    this.client.connect()
-      .then(() => {
-        this.isConnect = true;
-      })
-      .catch((err) => {
-        this.isConnect = false;
-        if (err) console.log(err.message || err.toString());
-      });
+    this.client.connect();
   }
 
   isAlive() {
-    return this.isConnect;
+    return this.client.isConnected();;
   }
 
   async nbUsers() {
