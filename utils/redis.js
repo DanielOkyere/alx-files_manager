@@ -3,23 +3,22 @@
  * Redis Client
  */
 import { createClient } from 'redis';
-
-const { promisify } = require('util');
+import { promisify } from 'redis';
 
 class RedisClient {
   constructor() {
     this.client = createClient();
-		this.isConnect = true
+    this.isConnect = true;
     this.client.on('error', (err) => {
-      console.log('Redis client failed to connect:', err. message || err.toString());
-			this.isConnect = false;
+      console.log('Redis client failed to connect:', err.message || err.toString());
+      this.isConnect = false;
     });
-		this.client.on('connect', () => {
-			this.isConnect = true;
-		});
+    this.client.on('connect', () => {
+      this.isConnect = true;
+    });
   }
 
-  isAlive() { 
+  isAlive() {
     return this.isConnect;
   }
 
