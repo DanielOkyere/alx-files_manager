@@ -2,7 +2,7 @@
  * Users Controller
  */
 import dbClient from '../utils/db';
-import crypto from 'crypto';
+import sha1 from 'sha1'
 
 
 export const authUser = async ({ email, password }) => {
@@ -10,8 +10,8 @@ export const authUser = async ({ email, password }) => {
     if (userExist) {
         return { status: 400, message: 'Already exist' }
     } else {
-        const hashed = crypto.createHash('sha1').update(password).digest('hex');
+        const hashed = sha1(password);
         const newUser = await dbClient.addUser(email, hashed);
-        return { status: 201, message: 'User Added' };
+        return { status: 201, id : newUser.insertedId.toString() };
     }
 }

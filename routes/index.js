@@ -42,7 +42,8 @@ router.post('/users', async (req, res) => {
   }
   if (data.status === 201){
     res.status(data.status);
-    res.json();
+    console.log(data.message)
+    res.json({"email": email, "id": data.id});
   }
 })
 

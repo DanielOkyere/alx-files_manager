@@ -40,7 +40,7 @@ class DBClient {
   }
 
   async addUser(email, password) {
-    return this.userCollection.insert({ email, password });
+    return this.userCollection.insertOne({ email, password });
   }
 
 
