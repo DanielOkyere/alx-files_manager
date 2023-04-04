@@ -3,6 +3,7 @@
  */
 import express from 'express';
 import { getStats, getStatus } from '../controllers/AppController';
+import {authUser} from '../controllers/UsersController';
 
 const router = express.Router();
 
@@ -23,5 +24,26 @@ router.get('/stats', async (req, res) => {
     "files": files,
   });
 });
+
+router.post('/users', async (req, res) => {
+  const {email, password } = req.body;
+  if (!email) {
+    res.status(400);
+    res.json({"error": "Missing email"});
+  }
+  if (!password){
+    res.status(400);
+    res.json({"error": "Missing password"});
+  }
+  const data = await authUser(req.body);
+  if (data.status === 400) {
+    res.status(data.status);
+    res.json({"error": "Already exist"})
+  }
+  if (data.status === 201){
+    res.status(data.status);
+    res.json();
+  }
+})
 
 module.exports = router;

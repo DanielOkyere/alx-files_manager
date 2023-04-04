@@ -3,9 +3,9 @@
  * Contains class DBClient
  */
 import { MongoClient } from 'mongodb';
-//import dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
-//dotenv.config();
+dotenv.config();
 
 class DBClient {
   constructor() {
@@ -15,6 +15,7 @@ class DBClient {
     this.url = `mongodb://${this.HOST}:${this.PORT}/${this.DB}`;
     this.client = new MongoClient(this.url, { useUnifiedTopology: true });
     this.client.connect();
+    this.userCollection = this.client.db(this.DB).collection('users');;
   }
 
   isAlive() {
@@ -22,14 +23,27 @@ class DBClient {
   }
 
   async nbUsers() {
-    const userCollection = this.client.db(this.DB).collection('users');
-    return userCollection.countDocuments();
+    return this.userCollection.countDocuments();
   }
 
   async nbFiles() {
     const fileCollection = this.client.db(this.DB).collection('files');
     return fileCollection.countDocuments();
   }
+
+  async checkUser(email) {
+    const user = await this.userCollection.findOne({ email });
+    if (user) {
+      if (user.email === email) return true;
+    }
+    return false
+  }
+
+  async addUser(email, password) {
+    return this.userCollection.insert({ email, password });
+  }
+
+
 }
 
 const dbClient = new DBClient();
