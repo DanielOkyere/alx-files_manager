@@ -1,21 +1,19 @@
 /**
- * Controllers 
+ * Controllers
  */
-import { redisClient } from '../utils/redis.js';
-import { dbClient } from '../utils/db.js';
+import redisClient from '../utils/redis';
+import dbClient from '../utils/db';
 
-const getStatus = async () => {
-	const redis = new redisClient();
+export const getStatus = () => {
+  const redis = redisClient;
+  const mongodb = dbClient;
 
-	return await redis.isAlive();
-}
+  return { redis: redis.isAlive(), mongo: mongodb.isAlive() };
+};
 
-const getStats = async () => {
-	const mongodb = new dbClient();
-	return await mongodb.isAlive();
-}
+export const getStats = async () => {
+  const users = await dbClient.nbUsers();
+  const files = await dbClient.nbFiles();
 
-module.exports = {
-	getStatus,
-	getStats
-}
+  return { users, files };
+};
