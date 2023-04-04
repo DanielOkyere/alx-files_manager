@@ -3,7 +3,7 @@
  */
 import express from 'express';
 import { getStats, getStatus } from '../controllers/AppController';
-import {authUser} from '../controllers/UsersController';
+import postNew from '../controllers/UsersController';
 
 const router = express.Router();
 
@@ -35,7 +35,7 @@ router.post('/users', async (req, res) => {
     res.status(400);
     res.json({"error": "Missing password"});
   }
-  const data = await authUser(req.body);
+  const data = await postNew(req.body);
   if (data.status === 400) {
     res.status(data.status);
     res.json({"error": "Already exist"})
