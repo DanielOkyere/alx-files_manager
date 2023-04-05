@@ -15,7 +15,8 @@ class DBClient {
     this.url = `mongodb://${this.HOST}:${this.PORT}/${this.DB}`;
     this.client = new MongoClient(this.url, { useUnifiedTopology: true });
     this.client.connect();
-    this.userCollection = this.client.db(this.DB).collection('users');;
+    this.userCollection = this.client.db(this.DB).collection('users');
+    this.fileCollection = this.client.db(this.DB).collection('files');
   }
 
   isAlive() {
@@ -36,14 +37,12 @@ class DBClient {
     if (user) {
       if (user.email === email) return true;
     }
-    return false
+    return false;
   }
 
   async addUser(email, password) {
     return this.userCollection.insertOne({ email, password });
   }
-
-
 }
 
 const dbClient = new DBClient();

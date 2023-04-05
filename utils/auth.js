@@ -2,9 +2,9 @@
  * Auth Utils
  */
 import sha1 from 'sha1';
-import dbClient from './db';
-import redisClient from './redis'
 import mongoDBCore from 'mongodb/lib/core';
+import dbClient from './db';
+import redisClient from './redis';
 
 export const getUserFromAuthHeader = async (req) => {
   const authorization = req.headers.authorization || null;
@@ -22,13 +22,13 @@ export const getUserFromAuthHeader = async (req) => {
   return user;
 };
 
-export const getUserFromXToken = async(req) => {
-    const token = req.headers['x-token'];
-    if (!token) return null;
-    const userId = await redisClient.get(`auth_${token}`);
-    if(!userId) return null;
-    const user = await(await dbClient.userCollection.findOne({
-        _id: new mongoDBCore.BSON.ObjectId(userId)
-    }))
-    return user || null;
-}
+export const getUserFromXToken = async (req) => {
+  const token = req.headers['x-token'];
+  if (!token) return null;
+  const userId = await redisClient.get(`auth_${token}`);
+  if (!userId) return null;
+  const user = await (await dbClient.userCollection.findOne({
+    _id: new mongoDBCore.BSON.ObjectId(userId),
+  }));
+  return user || null;
+};
